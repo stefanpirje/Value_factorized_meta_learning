@@ -1,0 +1,5 @@
+rl_algorithm:
+  n_steps: [20, 100, 500]
+  beta_entropy: [[0.000005,no],[1,yes]]
+
+
