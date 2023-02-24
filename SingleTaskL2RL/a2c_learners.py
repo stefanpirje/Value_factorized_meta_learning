@@ -28,6 +28,10 @@ class A2CLearnerMetaWorldNormalDist:
         self.policy_dist_type = config.rl_algorithm.policy_dist_type
         self.l1_loss = torch.nn.L1Loss(reduction='none')
 
+        self.gae  = config.rl_algorithm.gae
+        if self.gae:
+            self.gamma_lambda = config.rl_algorithm.gae_lambda * self.gamma #includes both the discount and lambda for gae
+
     def step(self,R):
         self.optimizer.zero_grad()
 
@@ -58,7 +62,11 @@ class A2CLearnerMetaWorldNormalDist:
         returns = []
         for i in reversed(range(V.shape[0])):
             R = r[i] + self.gamma*R
-            advantage.append(R - V[i])
+            if self.gae and len(advantage) != 0:
+                delta = r[i] + self.gamma*V[i+1] - V[i]
+                advantage.append(delta + self.gamma_lambda * advantage[-1])
+            else:
+                advantage.append(R - V[i])
             returns.append(R)
         advantage.reverse() # reverse the advantage list to be in the corect sequential order
         # advantage -> shape = rollout_length
