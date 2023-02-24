@@ -34,7 +34,7 @@ class ContinuousActionsAgentNormalDistSingleTask:
         self.o_t, self.r_t, self.done, _, _ = self.env.step(env_a_t) # Step the environoment with the sampled action
 
         # Convert the numpy values returned by the MetaWorld environment to torch tensors used for the input of the LSTM
-        self.r_t = torch.from_numpy(self.r_t).unsqueeze(dim=1)
+        self.r_t = torch.from_numpy(self.r_t).unsqueeze(dim=1) / self.max_reward_value # simplest normalization for metaworld (r in [0,10])
         self.o_t = torch.from_numpy(self.o_t)
        
         # there is no truncation in metaworld upon reaching the desired target, so the only problem that could appear are very large observations 
@@ -111,7 +111,7 @@ class ContinuousActionsAgentNormalDistSingleTask:
                         dones.append(done)
                         actions.append(a_t)
                     # Convert the numpy values returned by the MetaWorld environment to torch tensors used for the input of the LSTM
-                    r_t = torch.from_numpy(r_t).unsqueeze(dim=1)
+                    r_t = torch.from_numpy(r_t).unsqueeze(dim=1) / self.max_reward_value # simplest normalization for metaworld (r in [0,10])
                     o_t = torch.from_numpy(o_t)
                     if eps >= n_exploration_eps:
                         return_ += r_t
