@@ -1,5 +1,12 @@
 rl_algorithm:
   n_steps: [20, 100, 500]
-  beta_entropy: [[0.000005,no],[1,yes]]
+  gae: [yes, no]
+  
+optimizer:
+  args_:
+    lr: [0.00025, 0.0001, 0.000075]
+
+
+
 
 
