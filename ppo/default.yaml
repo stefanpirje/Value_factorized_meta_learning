@@ -1,0 +1,64 @@
+device: cuda
+
+task:
+  name: reach-v2
+  max_reward_value: 10
+
+meta_learning:
+  rollout_max_length: 500
+  meta_batch_size: 25
+  rollouts_per_task: 10
+
+model:
+  hidden_size: 256
+  init: orthogonal
+  obs_encoding: identity
+  obs_encoding_hidden_size: 64
+  std_plus: softplus
+  softplus_beta: 1
+  input_builder: L2RL_input_builder
+  base_recurrent: yes
+  include_time_step: yes
+
+rl_algorithm:
+  name: PPO
+  ppo_epoch: 10
+  num_mini_batch: 5
+  clip_param: 0.2
+  gamma: 0.99
+  gradient_clipping: [no]
+  beta_entropy: [0.000232, no]
+  beta_entropy_final_value: 0
+  beta_value_function_loss: 0.5
+  use_clipped_value_loss: yes
+  policy_dist_type: Normal
+  n_steps: 500
+  gae: yes
+  gae_lambda: 0.95
+  use_proper_time_limits: no
+  act_deterministic: no
+  bootstrap_truncated_state: yes
+
+optimizer:
+  name: Adam
+  lr_schedule: no
+  weight_decay: no
+  args_:
+    lr: 0.0001
+    eps: 0.000022
+    betas: [0.9, 0.999]
+
+validation:
+  n_exploration_episodes: 10
+  n_test_episodes: 1
+  device: cuda
+
+training:
+  nr_episodes: 8000
+  epoch_length: 100
+  nr_training_epochs: 80
+  model_checkpoint_frequency: 20
+  
+paths:
+  tensorboard_logdir: /root/RL/data/RNN_meta_learning/logs/tensorboard/ml1_ppo_hiperparam_clipping
+  

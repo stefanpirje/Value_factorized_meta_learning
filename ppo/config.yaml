@@ -1,0 +1,22 @@
+rl_algorithm:
+  clip_param: [0.1, 0.2]
+  ppo_epoch: [10]
+  num_mini_batch: [5]
+  bootstrap_truncated_state: [no]
+  use_clipped_value_loss: [no]
+  gradient_clipping: [[no], [yes,50]]
+
+optimizer:
+  lr_schedule: [yes]
+  weight_decay: [no]
+  args_:
+    lr: 
+      #- 0.000077
+      - 0.000129
+      # - 0.000215
+      # - 0.000359
+model:
+  include_time_step: [yes] #, no]
+
+task:
+  name: [reach-v2,pick-place-v2]
